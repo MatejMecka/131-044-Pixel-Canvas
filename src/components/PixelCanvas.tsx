@@ -400,7 +400,7 @@ export default function PixelCanvas() {
       console.log("Transaction submitted successfully:", submitRpcResponse)
       showToast(
         "Success!",
-        "Your pixels have been submitted to the network.",
+        "Your pixels have been submitted to the network. View transaction at: https://stellar.expert/explorer/testnet/tx/" + submitRpcResponse.hash,
         "success"
       )
       resetSubmitRpc() // Reset to allow future submissions
@@ -430,98 +430,96 @@ export default function PixelCanvas() {
   }
 
   return (
-    // --- Wrap in Toast Provider ---
+    // --- FIXED: Changed Toast to Toast.Provider ---
     <Toast.Provider swipeDirection="right">
       <div className="flex h-screen flex-col bg-background">
-  {/* Header */}
-  <header className="flex items-center justify-between border-b border-border px-6 py-4">
-    <div className="flex items-center gap-3">
-      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-        <div className="h-6 w-6 rounded-sm bg-primary-foreground" />
-      </div>
-      <h1 className="text-xl font-bold text-white">131.044 XLM Home Page</h1>
-    </div>
-  </header>
+        {/* Header */}
+        <header className="flex items-center justify-between border-b border-border px-6 py-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
+              <div className="h-6 w-6 rounded-sm bg-primary-foreground" />
+            </div>
+            <h1 className="text-xl font-bold text-white">131.044 XLM Home Page</h1>
+          </div>
+        </header>
 
-  <div className="flex flex-1 overflow-hidden">
-    {/* Main Canvas Area */}
-    <div className="flex flex-1 flex-col min-w-0">
-      <div
-        ref={containerRef}
-        className="relative flex-1 overflow-hidden bg-[#0a0a0a]"
-      >
-        <canvas
-          ref={canvasRef}
-          width={1200}
-          height={800}
-          className="cursor-crosshair"
-          onClick={handleCanvasClick}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          onWheel={handleWheel}
-          onContextMenu={(e) => e.preventDefault()}
-        />
+        <div className="flex flex-1 overflow-hidden">
+          {/* Main Canvas Area */}
+          <div className="flex flex-1 flex-col min-w-0">
+            <div
+              ref={containerRef}
+              className="relative flex-1 overflow-hidden bg-[#0a0a0a]"
+            >
+              <canvas
+                ref={canvasRef}
+                width={1200}
+                height={800}
+                className="cursor-crosshair"
+                onClick={handleCanvasClick}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+                onWheel={handleWheel}
+                onContextMenu={(e) => e.preventDefault()}
+              />
 
-        {/* Zoom Controls */}
-        <div className="absolute bottom-6 right-6 flex flex-col gap-2">
-          <Button
-            size="3"
-            variant="classic"
-            onClick={handleZoomIn}
-            className="h-10 w-10"
-          >
-            <ZoomIn className="h-5 w-5" />
-          </Button>
-          <Button
-            size="3"
-            variant="classic"
-            onClick={handleZoomOut}
-            className="h-10 w-10"
-          >
-            <ZoomOut className="h-5 w-5" />
-          </Button>
+              {/* Zoom Controls */}
+              <div className="absolute bottom-6 right-6 flex flex-col gap-2">
+                <Button
+                  size="3"
+                  variant="classic"
+                  onClick={handleZoomIn}
+                  className="h-10 w-10"
+                >
+                  <ZoomIn className="h-5 w-5" />
+                </Button>
+                <Button
+                  size="3"
+                  variant="classic"
+                  onClick={handleZoomOut}
+                  className="h-10 w-10"
+                >
+                  <ZoomOut className="h-5 w-5" />
+                </Button>
+              </div>
+
+              {/* Zoom Level Indicator */}
+              <div className="absolute bottom-6 left-6 rounded-lg bg-card px-3 py-2 text-sm font-medium">
+                {Math.round(zoom * 100)}%
+              </div>
+            </div>
+
+            <div className="border-t border-border bg-card p-4">
+              <ColorPalette
+                colors={COLORS}
+                selectedColor={selectedColor}
+                onColorSelect={setSelectedColor}
+              />
+            </div>
+          </div>
+          
+          {/* Right Sidebar with Pixel List and Leaderboard */}
+          <aside className="flex w-96 flex-col border-l border-border bg-card">
+            {/* Pixel List - Top Half */}
+            <div className="border-b border-border p-4 h-1/2 flex flex-col">
+              <PixelList
+                pixels={selectedPixels}
+                onRemove={handleRemovePixel}
+                onClear={handleClearSelection}
+                onPurchase={handlePurchase}
+                isPending={isSubmitRpcPending} 
+              />
+            </div>
+            
+            {/* Leaderboard - Bottom Half */}
+            <div className="p-4 h-1/2 flex flex-col overflow-hidden">
+              <Leaderboard data={leaderboardData}/>
+            </div>
+          </aside>
         </div>
-
-        {/* Zoom Level Indicator */}
-        <div className="absolute bottom-6 left-6 rounded-lg bg-card px-3 py-2 text-sm font-medium">
-          {Math.round(zoom * 100)}%
-        </div>
-      </div>
-
-      <div className="border-t border-border bg-card p-4">
-        <ColorPalette
-          colors={COLORS}
-          selectedColor={selectedColor}
-          onColorSelect={setSelectedColor}
-        />
-      </div>
-    </div>
-    
-    {/* Right Sidebar with Pixel List and Leaderboard */}
-    <aside className="flex w-96 flex-col border-l border-border bg-card">
-      {/* Pixel List - Top Half */}
-      <div className="border-b border-border p-4 h-1/2 flex flex-col">
-        <PixelList
-          pixels={selectedPixels}
-          onRemove={handleRemovePixel}
-          onClear={handleClearSelection}
-          onPurchase={handlePurchase}
-          isPending={isSubmitRpcPending} 
-        />
       </div>
       
-      {/* Leaderboard - Bottom Half */}
-      <div className="p-4 h-1/2 flex flex-col overflow-hidden">
-        <Leaderboard data={leaderboardData}/>
-      </div>
-    </aside>
-  </div>
-</div>
-      
-      
-
       {/* --- Toast Root and Viewport --- */}
       <Toast.Root
         className={`

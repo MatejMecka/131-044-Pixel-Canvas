@@ -69,7 +69,7 @@ reset
 
 ### Staging environment configuration
 [staging.network]
-rpc-url = "https://soroban-testnet.stellar.org"
+rpc-url = "https://soroban-rpc.testnet.stellar.gateway.fm"
 network-passphrase = "Test SDF Network ; September 2015"
 
 [[staging.accounts]]
@@ -84,6 +84,7 @@ default = true
 # soroban-increment-contract = { id = "C567..." }
 # soroban-token-contract = { id = "C678..." }
 # eurc = { id = "C789..." }
+pixelfun = {id = "CCDKX4BA5ZKIDRERHJR5QWOITMBMHDVWDJ7MDH7JZYE3P64ASM7IV457"}
 
 ### Production environment configuration
 [production.network]

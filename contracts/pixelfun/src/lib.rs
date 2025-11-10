@@ -164,7 +164,10 @@ impl Contract {
         }
 
         // Payment logic
-        let native_asset_address = Address::from_str(&env, "CDMLFMKMMD7MWZP3FKUBZPVHTUEDLSX4BYGYKH4GCESXYHS3IHQ4EIG4");
+        // Testnet
+        let native_asset_address = Address::from_str(&env, "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC");
+        // LOCAL
+        //let native_asset_address = Address::from_str(&env, "CDMLFMKMMD7MWZP3FKUBZPVHTUEDLSX4BYGYKH4GCESXYHS3IHQ4EIG4");
         let native_client = token::Client::new(&env, &native_asset_address);
         let cost = 10000000_i128;
 
@@ -184,6 +187,9 @@ impl Contract {
 
         // Update leaderboard
         Self::update_user_pixel_count(&env, &user, 1);
+
+        // Transfer
+        native_client.transfer(&user, &env.current_contract_address(), &cost);
 
         Ok(true)
     }
@@ -230,7 +236,10 @@ impl Contract {
         let total_cost = cost_per_pixel.checked_mul(pixel_count as i128)
             .ok_or(Error::OverflowValue)?;
         
-        let native_asset_address = Address::from_str(&env, "CDMLFMKMMD7MWZP3FKUBZPVHTUEDLSX4BYGYKH4GCESXYHS3IHQ4EIG4");
+        // Testnet
+        let native_asset_address = Address::from_str(&env, "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC");
+        // Local
+        //let native_asset_address = Address::from_str(&env, "CDMLFMKMMD7MWZP3FKUBZPVHTUEDLSX4BYGYKH4GCESXYHS3IHQ4EIG4");
         let native_client = token::Client::new(&env, &native_asset_address);
 
         if total_cost > native_client.balance(&user) {
@@ -253,6 +262,9 @@ impl Contract {
 
         // Update leaderboard
         Self::update_user_pixel_count(&env, &user, pixel_count);
+
+        // Transfer
+        native_client.transfer(&user, &env.current_contract_address(), &total_cost);
 
         Ok(true)
     }

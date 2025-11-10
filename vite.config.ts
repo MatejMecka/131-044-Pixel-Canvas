@@ -20,6 +20,7 @@ export default defineConfig(() => {
     ],
     build: {
       target: "esnext",
+      minify: "false",
     },
     optimizeDeps: {
       exclude: ["@stellar/stellar-xdr-json"],
@@ -35,7 +36,7 @@ export default defineConfig(() => {
           changeOrigin: true,
         },
       },
-      allowedHosts: ["7840a38918a8.ngrok-free.app"],
+      allowedHosts: ["0eb6248a5121.ngrok-free.app"],
     },
   };
 });
